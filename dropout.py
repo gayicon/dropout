@@ -13,15 +13,29 @@ def load_data():
 
 df = load_data()
 
+# Clean column names: strip extra spaces
+df.columns = df.columns.str.strip()
+
 # Dataset Overview
 st.subheader("Dataset Overview")
 st.write(df.head())
 
 # Sidebar for Feature Selection
 st.sidebar.subheader("Interactive Visualization Settings")
-feature_x = st.sidebar.selectbox("Select X-axis feature", df.columns)
-feature_y = st.sidebar.selectbox("Select Y-axis feature", df.columns)
-color_feature = st.sidebar.selectbox("Select feature for color grouping", df.columns)
+
+# Filter out unnecessary columns (add to this list as needed)
+filter_columns = [
+    'Marital status', 'Application mode', 'Course', 'Gender', 'Age at enrollment', 
+    'Admission grade', 'Curricular units 1st sem (credited)', 'Curricular units 1st sem (approved)', 
+    'Curricular units 2nd sem (credited)', 'Target', 'Unemployment rate', 'Inflation rate', 'GDP'
+]
+
+# Ensure that only relevant columns appear in the sidebar
+available_columns = [col for col in df.columns if col in filter_columns]
+
+feature_x = st.sidebar.selectbox("Select X-axis feature", available_columns)
+feature_y = st.sidebar.selectbox("Select Y-axis feature", available_columns)
+color_feature = st.sidebar.selectbox("Select feature for color grouping", available_columns)
 
 # Scatter Plot
 st.subheader(f"Scatter Plot: {feature_x} vs {feature_y}")
